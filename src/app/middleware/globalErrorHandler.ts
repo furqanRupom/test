@@ -18,7 +18,7 @@ const globalErrorHandler = (
   let message: string = error?.message || 'Something went wrong!';
   let errorMessage: string = error?.message || 'Something went wrong';
   let errorDetails = {};
-  let stack: unknown;
+  let stack: unknown = null;
 
   if (error instanceof ZodError) {
     const cleanError = handleZodError(error);

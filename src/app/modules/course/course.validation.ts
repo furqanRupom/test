@@ -13,21 +13,23 @@ const detailsSchemaValidation = z.object({
 });
 
 const courseSchemaValidation = z.object({
-  title: z.string(),
-  instructor: z.string(),
-  categoryId: z.string(),
-  price: z.number(),
-  tags: z.array(tagsSchemaValidation),
-  startDate: z.string(),
-  endDate: z.string(),
-  language: z.string(),
-  provider: z.string(),
-  durationWeeks: z.number(),
-  details: detailsSchemaValidation,
+  body: z.object({
+    title: z.string(),
+    instructor: z.string(),
+    categoryId: z.string(),
+    price: z.number(),
+    tags: z.array(tagsSchemaValidation),
+    startDate: z.string(),
+    endDate: z.string(),
+    language: z.string(),
+    provider: z.string(),
+    durationWeeks: z.number(),
+    details: detailsSchemaValidation,
+  }),
 });
 
 const categorySchemaValidation = z.object({
-  name: z.string(),
+  body: z.object({ name: z.string() }),
 });
 
 /* update schema validation */
@@ -45,23 +47,25 @@ const detailsSchemaUpdateValidation = z.object({
 /* course schema update validation  */
 
 const courseSchemaUpdateValidation = z.object({
-  title: z.string().optional(),
-  instructor: z.string().optional(),
-  categoryId: z.string().optional(),
-  price: z.number().optional(),
-  tags: z.array(tagsSchemaUpdateValidation),
-  startDate: z.string().optional(),
-  endDate: z.string().optional(),
-  language: z.string().optional(),
-  provider: z.string().optional(),
-  durationWeeks: z.number().optional(),
-  details: detailsSchemaUpdateValidation,
+  body: z.object({
+    title: z.string().optional(),
+    instructor: z.string().optional(),
+    categoryId: z.string().optional(),
+    price: z.number().optional(),
+    tags: z.array(tagsSchemaUpdateValidation),
+    startDate: z.string().optional(),
+    endDate: z.string().optional(),
+    language: z.string().optional(),
+    provider: z.string().optional(),
+    durationWeeks: z.number().optional(),
+    details: detailsSchemaUpdateValidation,
+  }),
 });
 
 /* category schema update validation  */
 
 const categorySchemaUpdateValidation = z.object({
-  name: z.string().optional(),
+  body: z.object({ name: z.string().optional() }),
 });
 
 export const courseValidations = {

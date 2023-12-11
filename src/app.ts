@@ -1,5 +1,6 @@
 import express, { Application ,Request,Response } from "express";
 import cors from "cors"
+import globalErrorHandler from "./app/middleware/globalErrorHandler";
 
 const app:Application = express()
 
@@ -16,5 +17,9 @@ app.get('/',(req:Request,res:Response)=>{
  res.send('yes course garden is running')
 })
 
+
+/* global error handler middleware */
+
+app.use(globalErrorHandler)
 
 export default app;
