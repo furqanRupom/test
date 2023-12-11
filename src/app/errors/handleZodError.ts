@@ -18,7 +18,7 @@ export const handleZodError = (error: ZodError) => {
 
   return {
     success: false,
-    message: 'zod Error',
+    message: 'Zod Error',
     errorMessage,
     errorDetails: {
       issues: error.issues,
