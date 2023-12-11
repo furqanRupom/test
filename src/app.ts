@@ -7,6 +7,11 @@ app.use(cors());
 app.use(express.json());
 
 
+
+/* all routes */
+
+app.use('/api/')
+
 app.get('/',(req:Request,res:Response)=>{
  res.send('yes course garden is running')
 })
