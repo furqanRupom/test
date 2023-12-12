@@ -7,7 +7,8 @@ const router = express.Router();
 
 
 /*  create courses routes */
-router.post('/',validateRequest(courseValidations.courseSchemaValidation),courseController.createCourse)
+router.post('/course',/*validateRequest(courseValidations.courseSchemaValidation),*/courseController.createCourse)
+router.get('/courses',courseController.retrieveAllCourses)
 
 
 

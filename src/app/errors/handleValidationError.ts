@@ -17,15 +17,17 @@ export const handleValidationError = (
         path: val?.path,
       };
     },
+
   );
 
-  const errorMessage = error.message.concat();
+
+  const errorMessage = errorDetails.map(msg=> msg.message)
 
 
   return {
     success: false,
     message: 'Validation Error',
-    errorMessage,
+    errorMessage:errorMessage.join(' '),
     errorDetails,
     stack: config.node_env === 'development' ? error?.stack : null,
   };

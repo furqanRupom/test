@@ -1,6 +1,6 @@
 import z from 'zod';
 
-/* course and category schema validation  */
+/* course  schema validation  */
 
 const tagsSchemaValidation = z.object({
   name: z.string(),
@@ -8,7 +8,7 @@ const tagsSchemaValidation = z.object({
 });
 
 const detailsSchemaValidation = z.object({
-  level: z.string(),
+  level: z.enum(['Beginner','Intermediate','Advanced']),
   description: z.string(),
 });
 

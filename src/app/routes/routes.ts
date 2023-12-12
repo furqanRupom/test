@@ -10,7 +10,7 @@ const router = express.Router();
 
 const moduleRoutes = [
   {
-    path:"/course",
+    path:"/",
     route:courseRoutes
   },
   {

@@ -14,14 +14,19 @@ stack?:unknown
 */
 
 export const handleZodError = (error: ZodError) => {
-  const errorMessage = error.message;
-
+  const convertMessage = JSON.parse(error.message);
+  const extractMessage: [] = convertMessage.map((msg: any) => {
+   const message =  msg.path.map((path: any) => {
+      return `${path} is ${msg.message}`
+    });
+    return message;
+  });
 
 
   return {
     success: false,
     message: 'Zod Error',
-    errorMessage,
+    errorMessage: extractMessage.join('.'),
     errorDetails: {
       issues: error.issues,
     },

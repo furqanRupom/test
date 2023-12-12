@@ -15,7 +15,11 @@ const tagsSchema = new Schema<ITags>({
 const detailsSchema = new Schema<IDetails>({
   level: {
     type: String,
-    required: true,
+    enum:{
+      values:['Beginner','Intermediate','Advanced'],
+      message:'{VALUE} is not valid !'
+    }
+
   },
   description: {
     type: String,
@@ -61,7 +65,7 @@ const courseSchema = new Schema<ICourse>({
   },
   durationWeeks: {
     type: Number,
-    
+
   },
   details: detailsSchema,
 });

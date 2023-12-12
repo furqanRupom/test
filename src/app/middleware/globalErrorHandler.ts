@@ -18,20 +18,20 @@ const globalErrorHandler = (
   let errorMessage: string = error?.message || 'Something went wrong';
   let errorDetails = {};
   let stack: unknown = null;
-
+  console.log(error)
   if (error instanceof ZodError) {
     const cleanError = handleZodError(error);
     message = cleanError.message;
     errorMessage = cleanError.errorMessage;
     errorDetails = cleanError.errorDetails;
     stack = cleanError?.stack;
-  } else if (error?.name === 'validationError') {
+  } else if (error?.name === 'ValidationError') {
     const cleanError = handleValidationError(error);
     message = cleanError.message;
     errorMessage = cleanError.errorMessage;
     errorDetails = cleanError.errorDetails;
     stack = cleanError?.stack;
-  } else if (error?.name === 'castError') {
+  } else if (error?.name === 'CastError') {
     const cleanError = handleCastError(error);
     message = cleanError.message;
     errorMessage = cleanError.errorMessage;

@@ -6,6 +6,7 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { courseServices } from "./course.service";
 
+/* create courses */
 
 const createCourse = catchAsync(async(req,res,next)=>{
   const payload = req.body;
@@ -18,10 +19,25 @@ const createCourse = catchAsync(async(req,res,next)=>{
   })
 })
 
+/* retrieve all courses */
+
+
+
+const retrieveAllCourses  = catchAsync(async(req,res,next) => {
+  const result = await courseServices.retrieveAllCoursesFromDB(req.query);
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: 'Courses retrieved successfully !',
+      data: result,
+    });
+})
+
 
 
 
 
 export const courseController = {
   createCourse,
+  retrieveAllCourses
 }
