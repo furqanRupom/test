@@ -60,10 +60,20 @@ const courseSchemaUpdateValidation = z.object({
   }),
 });
 
-/* category schema update validation  */
+/* reviews schema  validation  */
+
+
+const reviewsSchemaValidation = z.object({
+  body:z.object({
+    courseId:z.string(),
+    rating:z.number(),
+    review:z.string()
+  })
+})
 
 
 export const courseValidations = {
   courseSchemaValidation,
   courseSchemaUpdateValidation,
+  reviewsSchemaValidation
 };

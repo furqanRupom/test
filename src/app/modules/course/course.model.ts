@@ -1,6 +1,8 @@
 import { Schema, model } from 'mongoose';
-import {  ICourse, IDetails, ITags } from './course.interface';
+import {  ICourse, IDetails, IReviews, ITags } from './course.interface';
 
+
+/* tags schema */
 const tagsSchema = new Schema<ITags>({
   name: {
     type: String,
@@ -11,6 +13,8 @@ const tagsSchema = new Schema<ITags>({
     default: false,
   },
 });
+
+/* details schema */
 
 const detailsSchema = new Schema<IDetails>({
   level: {
@@ -26,6 +30,9 @@ const detailsSchema = new Schema<IDetails>({
     required: true,
   },
 });
+
+
+/* course schema */
 
 const courseSchema = new Schema<ICourse>({
   title: {
@@ -63,13 +70,38 @@ const courseSchema = new Schema<ICourse>({
     type: String,
     required: true,
   },
-  durationWeeks: {
+  durationInWeeks: {
     type: Number,
 
   },
   details: detailsSchema,
+},
+{
+  timestamps:true
 });
 
 export const CourseModel = model<ICourse>('Course', courseSchema);
 
 
+
+/* reviews schema */
+
+
+const reviewsSchema = new Schema<IReviews>({
+  courseId:{
+    type:Schema.Types.ObjectId,
+    required:true,
+    ref:'Course'
+  },
+  rating:{
+    type:Number,
+    required:true
+  },
+  review:{
+    type:String,
+    required:true
+  }
+})
+
+
+export const ReviewsModel = model<IReviews>('Reviews',reviewsSchema)

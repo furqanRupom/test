@@ -21,8 +21,16 @@ export interface ICourse {
   endDate:string;
   language:string;
   provider:string;
-  durationWeeks?:number;
+  durationInWeeks?:number;
   details:IDetails;
 }
 
 
+
+/* reviews interface */
+
+export interface IReviews {
+  courseId:Types.ObjectId;
+  rating:number;
+  review:string;
+}

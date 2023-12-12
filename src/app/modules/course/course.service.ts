@@ -3,20 +3,22 @@ import { CourseModel } from './course.model';
 
 /* create course in to db  */
 
-/* TODO : sorting,filtering and paginating */
 
 const createCourseIntoDB = async (payload: ICourse) => {
   /* calculate duration weeks */
   const startDate = new Date(payload.startDate);
   const endDate = new Date(payload.endDate);
   const defTime: number = endDate.getTime() - startDate.getTime();
-  payload.durationWeeks = Math.ceil(defTime / (1000 * 60 * 60 * 24 * 7));
+  payload.durationInWeeks = Math.ceil(defTime / (1000 * 60 * 60 * 24 * 7));
 
   const result = await CourseModel.create(payload);
   result.save();
 
   return result;
 };
+
+
+/* retrieve all the courses */
 
 const retrieveAllCoursesFromDB = async (query: any) => {
   const {
@@ -124,6 +126,24 @@ const retrieveAllCoursesFromDB = async (query: any) => {
 
   return result;
 };
+
+/* update courses */
+
+
+
+
+
+
+
+
+
+/* create reviews */
+
+
+
+
+
+
 
 export const courseServices = {
   createCourseIntoDB,
