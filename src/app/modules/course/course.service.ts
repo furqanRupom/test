@@ -1,5 +1,5 @@
-import { ICourse } from './course.interface';
-import { CourseModel } from './course.model';
+import { ICourse, IReviews } from './course.interface';
+import { CourseModel, ReviewsModel } from './course.model';
 
 /* create course in to db  */
 
@@ -115,8 +115,8 @@ const retrieveAllCoursesFromDB = async (query: any) => {
     sort = { [sortBy]: sortOrder === 'desc' ? -1 : 1 };
   }
 
-  let perPage = parseInt(page);
-  let perPageLimit = parseInt(limit);
+  let perPage = parseInt(page) | 1;
+  let perPageLimit = parseInt(limit) | 5;
   let skip = (perPage - 1) * perPageLimit;
 
   const result = await CourseModel.find(baseQuery)
@@ -124,7 +124,13 @@ const retrieveAllCoursesFromDB = async (query: any) => {
     .skip(skip)
     .limit(limit);
 
-  return result;
+    const meta = {
+      page:page | 1,
+      limit:limit | 5,
+      total:result.length
+    }
+
+  return {result,meta};
 };
 
 /* update courses */
@@ -140,6 +146,12 @@ const retrieveAllCoursesFromDB = async (query: any) => {
 /* create reviews */
 
 
+const createCourseReviewsIntoDB = async(payload:IReviews) => {
+  const result = await ReviewsModel.create(payload);
+  return result;
+}
+
+
 
 
 
@@ -148,4 +160,5 @@ const retrieveAllCoursesFromDB = async (query: any) => {
 export const courseServices = {
   createCourseIntoDB,
   retrieveAllCoursesFromDB,
+  createCourseReviewsIntoDB
 };

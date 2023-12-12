@@ -24,20 +24,42 @@ const createCourse = catchAsync(async(req,res,next)=>{
 
 
 const retrieveAllCourses  = catchAsync(async(req,res,next) => {
-  const result = await courseServices.retrieveAllCoursesFromDB(req.query);
+  const {meta,result} = await courseServices.retrieveAllCoursesFromDB(req.query);
     sendResponse(res, {
       success: true,
       statusCode: 200,
       message: 'Courses retrieved successfully !',
-      data: result,
+      meta:meta,
+      data: result
     });
 })
 
 
 
+/* update course */
+
+
+
+
+
+
+/* create course reviews */
+
+const createCourseReviews = catchAsync(async(req,res)=>{
+  const result = await courseServices.createCourseReviewsIntoDB(req.body);
+
+ sendResponse(res, {
+   success: true,
+   statusCode: 201,
+   message: 'Review created successfully',
+   data: result,
+ });
+})
+
 
 
 export const courseController = {
   createCourse,
-  retrieveAllCourses
+  retrieveAllCourses,
+  createCourseReviews
 }
