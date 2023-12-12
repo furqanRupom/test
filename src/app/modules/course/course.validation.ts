@@ -23,14 +23,12 @@ const courseSchemaValidation = z.object({
     endDate: z.string(),
     language: z.string(),
     provider: z.string(),
-    durationWeeks: z.number(),
+    durationWeeks: z.number().optional(),
     details: detailsSchemaValidation,
   }),
 });
 
-const categorySchemaValidation = z.object({
-  body: z.object({ name: z.string() }),
-});
+
 
 /* update schema validation */
 
@@ -64,13 +62,8 @@ const courseSchemaUpdateValidation = z.object({
 
 /* category schema update validation  */
 
-const categorySchemaUpdateValidation = z.object({
-  body: z.object({ name: z.string().optional() }),
-});
 
 export const courseValidations = {
   courseSchemaValidation,
-  categorySchemaValidation,
   courseSchemaUpdateValidation,
-  categorySchemaUpdateValidation,
 };

@@ -7,7 +7,6 @@ import { handleDuplicateError } from '../errors/handleDuplicateError';
 
 /* create global error handler */
 
-
 const globalErrorHandler = (
   error: any,
   req: Request,
@@ -46,7 +45,7 @@ const globalErrorHandler = (
     stack = cleanError?.stack;
   }
 
-  res.json({
+  return res.status(400).json({
     success,
     message,
     errorMessage,

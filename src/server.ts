@@ -12,7 +12,7 @@ const main = async () => {
       console.log('successfully connected');
     }
     server = app.listen(config.port, () => {
-      console.log(`This Mongoose App is running on port ${config.port}`);
+      console.log(`This course garden App is running on port ${config.port}`);
     });
   } catch (error) {
     console.log(error);

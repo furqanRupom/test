@@ -21,11 +21,8 @@ export interface ICourse {
   endDate:string;
   language:string;
   provider:string;
-  durationWeeks:number;
+  durationWeeks?:number;
   details:IDetails;
 }
 
 
-export interface ICategory {
-  name:string
-}

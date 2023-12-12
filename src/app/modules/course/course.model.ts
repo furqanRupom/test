@@ -1,9 +1,9 @@
 import { Schema, model } from 'mongoose';
-import { ICategory, ICourse, IDetails, ITags } from './course.interface';
+import {  ICourse, IDetails, ITags } from './course.interface';
 
 const tagsSchema = new Schema<ITags>({
   name: {
-    typ: String,
+    type: String,
     required: true,
   },
   isDeleted: {
@@ -36,6 +36,7 @@ const courseSchema = new Schema<ICourse>({
   categoryId: {
     type: Schema.Types.ObjectId,
     required: true,
+    ref:'Category'
   },
   price: {
     type: Number,
@@ -60,25 +61,11 @@ const courseSchema = new Schema<ICourse>({
   },
   durationWeeks: {
     type: Number,
-    required: true,
+    
   },
   details: detailsSchema,
 });
 
-
-export const CourseModel = model<ICourse>('Course',courseSchema);
-
+export const CourseModel = model<ICourse>('Course', courseSchema);
 
 
-/* category model and schema */
-
-
-const categorySchema = new Schema<ICategory>({
- name:{
-  type:String,
-  required:true
- }
-})
-
-
-export const CategoryModel = model<ICategory>('Category',categorySchema)

@@ -14,7 +14,9 @@ stack?:unknown
 */
 
 export const handleZodError = (error: ZodError) => {
-  const errorMessage = error.message.concat();
+  const errorMessage = error.message;
+
+
 
   return {
     success: false,
