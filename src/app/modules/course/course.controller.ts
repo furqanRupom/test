@@ -59,6 +59,7 @@ const createCourseReviews = catchAsync(async(req,res)=>{
 
 
 /* create course reviews by by course id from db */
+
 const getSpecificCourseReviews = catchAsync(async (req, res) => {
   const result = await courseServices.getSpecificCourseReviewsFromDB(req.params.courseId);
 
@@ -71,9 +72,23 @@ const getSpecificCourseReviews = catchAsync(async (req, res) => {
   });
 });
 
+
+/* get best course */
+
+const getBestCourse = catchAsync(async(req,res)=>{
+  const result = await courseServices.getBestCoursesFromDB();
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: 'Best course retrieved successfully',
+      data: result,
+    });
+})
+
 export const courseController = {
   createCourse,
   retrieveAllCourses,
   createCourseReviews,
-  getSpecificCourseReviews
+  getSpecificCourseReviews,
+  getBestCourse
 }

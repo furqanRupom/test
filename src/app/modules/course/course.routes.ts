@@ -19,6 +19,8 @@ router.post('/reviews',validateRequest(courseValidations.reviewsSchemaValidation
 
 router.get('/courses/:courseId/reviews',courseController.getSpecificCourseReviews);
 
+router.get('/course/best',courseController.getBestCourse)
+
 
 
 

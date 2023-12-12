@@ -154,17 +154,72 @@ const getSpecificCourseReviewsFromDB = async (courseId: string) => {
       },
     },
     {
-      $project:{createdAt:0,updatedAt:0,__v:0}
-    }
+      $project: { createdAt: 0, updatedAt: 0, __v: 0 },
+    },
   ]);
 
   const [course] = result;
   return course;
 };
 
+/* get best courses */
+
+const getBestCoursesFromDB = async () => {
+  const result = await ReviewsModel.aggregate([
+    {
+      $group: {
+        _id: '$courseId',
+        averageRating: { $avg: '$rating' },
+        reviewCount: { $sum: 1 },
+      },
+    },
+    {
+      $sort: {
+        averageRating: -1,
+        reviewCount: -1,
+      },
+    },
+    {
+      $limit: 1,
+    },
+    {
+      $lookup: {
+        from: 'courses',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'course',
+      },
+    },
+    {
+      $unwind: '$course',
+    },
+    {
+      $project: {
+        _id: '$course._id',
+        title: '$course.title',
+        instructor: '$course.instructor',
+        categoryId: '$course.categoryId',
+        price: '$course.price',
+        tags: '$course.tags',
+        startDate: '$course.startDate',
+        endDate: '$course.endDate',
+        language: '$course.language',
+        provider: '$course.provider',
+        durationInWeeks: '$course.durationInWeeks',
+        details: '$course.details',
+        averageRating: 1,
+        reviewCount: 1,
+      },
+    },
+  ]);
+
+  const [bestCourse] = result;
+  return bestCourse;
+};
 export const courseServices = {
   createCourseIntoDB,
   retrieveAllCoursesFromDB,
   createCourseReviewsIntoDB,
   getSpecificCourseReviewsFromDB,
+  getBestCoursesFromDB
 };
