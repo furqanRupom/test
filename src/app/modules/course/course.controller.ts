@@ -58,8 +58,22 @@ const createCourseReviews = catchAsync(async(req,res)=>{
 
 
 
+/* create course reviews by by course id from db */
+const getSpecificCourseReviews = catchAsync(async (req, res) => {
+  const result = await courseServices.getSpecificCourseReviewsFromDB(req.params.courseId);
+
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'Retrieve course with reviews successfully',
+    data: result,
+  });
+});
+
 export const courseController = {
   createCourse,
   retrieveAllCourses,
-  createCourseReviews
+  createCourseReviews,
+  getSpecificCourseReviews
 }

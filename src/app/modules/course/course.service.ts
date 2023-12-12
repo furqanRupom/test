@@ -1,8 +1,8 @@
+import mongoose from 'mongoose';
 import { ICourse, IReviews } from './course.interface';
 import { CourseModel, ReviewsModel } from './course.model';
 
 /* create course in to db  */
-
 
 const createCourseIntoDB = async (payload: ICourse) => {
   /* calculate duration weeks */
@@ -16,7 +16,6 @@ const createCourseIntoDB = async (payload: ICourse) => {
 
   return result;
 };
-
 
 /* retrieve all the courses */
 
@@ -61,7 +60,6 @@ const retrieveAllCoursesFromDB = async (query: any) => {
 
   /* start Date and End Date filtering */
 
-
   if (startDate !== undefined && endDate !== undefined) {
     baseQuery.startDate = {
       $gte: new Date(startDate),
@@ -95,16 +93,12 @@ const retrieveAllCoursesFromDB = async (query: any) => {
 
   /* level filtering */
 
- if (level) {
-   baseQuery['details.level'] = level;
- }
+  if (level) {
+    baseQuery['details.level'] = level;
+  }
 
-
-
- /* sorting */
- let sort: any = null;
-
-
+  /* sorting */
+  let sort: any = null;
 
   if (
     sortBy &&
@@ -124,41 +118,53 @@ const retrieveAllCoursesFromDB = async (query: any) => {
     .skip(skip)
     .limit(limit);
 
-    const meta = {
-      page:page | 1,
-      limit:limit | 5,
-      total:result.length
-    }
+  const meta = {
+    page: page | 1,
+    limit: limit | 5,
+    total: result.length,
+  };
 
-  return {result,meta};
+  return { result, meta };
 };
 
 /* update courses */
 
-
-
-
-
-
-
-
-
 /* create reviews */
 
-
-const createCourseReviewsIntoDB = async(payload:IReviews) => {
+const createCourseReviewsIntoDB = async (payload: IReviews) => {
   const result = await ReviewsModel.create(payload);
   return result;
-}
+};
 
+/* create course reviews by by course id from db */
 
+const getSpecificCourseReviewsFromDB = async (courseId: string) => {
+  const result = await CourseModel.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(courseId),
+      },
+    },
+    {
+      $lookup: {
+        from: 'reviews',
+        localField: '_id',
+        foreignField: 'courseId',
+        as: 'reviews',
+      },
+    },
+    {
+      $project:{createdAt:0,updatedAt:0,__v:0}
+    }
+  ]);
 
-
-
-
+  const [course] = result;
+  return course;
+};
 
 export const courseServices = {
   createCourseIntoDB,
   retrieveAllCoursesFromDB,
-  createCourseReviewsIntoDB
+  createCourseReviewsIntoDB,
+  getSpecificCourseReviewsFromDB,
 };

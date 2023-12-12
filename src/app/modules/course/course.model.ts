@@ -91,7 +91,7 @@ const reviewsSchema = new Schema<IReviews>({
   courseId:{
     type:Schema.Types.ObjectId,
     required:true,
-    ref:'Course'
+    ref:'course'
   },
   rating:{
     type:Number,

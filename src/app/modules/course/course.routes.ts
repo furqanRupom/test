@@ -17,6 +17,9 @@ router.get('/courses',courseController.retrieveAllCourses)
 router.post('/reviews',validateRequest(courseValidations.reviewsSchemaValidation),courseController.createCourseReviews);
 
 
+router.get('/courses/:courseId/reviews',courseController.getSpecificCourseReviews);
+
+
 
 
 export const courseRoutes = router
