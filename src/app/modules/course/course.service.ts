@@ -61,13 +61,23 @@ const retrieveAllCoursesFromDB = async (query: any) => {
   }
 
   /* start Date and End Date filtering */
+  console.log(query)
 
-  if (startDate !== undefined && endDate !== undefined) {
-    baseQuery.startDate = {
-      $gte: new Date(startDate),
-      $lte: new Date(endDate),
-    };
-  }
+if (startDate && endDate && startDate <= endDate) {
+  baseQuery.startDate = {
+    $gte: startDate,
+    $lte: endDate,
+  };
+} else if (startDate) {
+  baseQuery.startDate = {
+    $gte: startDate,
+  };
+} else if (endDate) {
+  baseQuery.endDate = {
+    $lte: endDate,
+  };
+}
+
 
   /* language filtering */
 
