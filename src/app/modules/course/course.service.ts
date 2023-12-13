@@ -117,20 +117,22 @@ const retrieveAllCoursesFromDB = async (query: any) => {
     sort = { [value]: sortOrder === 'asc' ? 1 : -1 };
   }
 
-  let perPage = parseInt(page) | 1;
-  let perPageLimit = parseInt(limit) | 10;
+  /* pagination */
+
+  let perPage = parseInt(page) || 1;
+  let perPageLimit = parseInt(limit) || 10;
   let skip = (perPage - 1) * perPageLimit;
 
   const queryResult = CourseModel.find(baseQuery)
     .sort(sort)
     .skip(skip)
-    .limit(perPageLimit);
+    .limit(parseInt(limit));
 
   const result = await queryResult;
 
   const meta = {
-    page: perPage,
-    limit: perPageLimit,
+    page: parseInt(page) || 1,
+    limit: parseInt(limit) || 10,
     total: result.length,
   };
 
@@ -285,6 +287,7 @@ const updateCourseFromDB = async (
 /* create reviews */
 
 const createCourseReviewsIntoDB = async (payload: IReviews) => {
+
   const result = await ReviewsModel.create(payload);
   return result;
 };

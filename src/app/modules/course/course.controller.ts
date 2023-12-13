@@ -58,7 +58,8 @@ const updateCourse = catchAsync(async (req, res) => {
 
 /* create course reviews */
 
-const createCourseReviews = catchAsync(async(req,res)=>{
+const createCourseReviews = catchAsync(async(req,res,next)=>{
+  console.log(req.body)
   const result = await courseServices.createCourseReviewsIntoDB(req.body);
 
  sendResponse(res, {
