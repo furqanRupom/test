@@ -30,7 +30,7 @@ Make sure you have the following installed on your machine (Mac/Linux/Windows):
 
 1. **Clone the Repository:**
     ```bash
-    git clone https://github.com/your-username/course-reviews-app.git
+    git clone https://github.com/furqanrupom/course-reviews-app.git
     cd course-reviews-app
     ```
 
