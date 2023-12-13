@@ -39,6 +39,19 @@ const retrieveAllCourses  = catchAsync(async(req,res,next) => {
 /* update course */
 
 
+const updateCourse = catchAsync(async (req, res) => {
+  const { courseId } = req.params;
+  const payload = req.body;
+  const result = await courseServices.updateCourseFromDB(courseId, payload);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'Courses updated successfully !',
+    data: result,
+  });
+});
+
 
 
 
@@ -90,5 +103,6 @@ export const courseController = {
   retrieveAllCourses,
   createCourseReviews,
   getSpecificCourseReviews,
-  getBestCourse
+  getBestCourse,
+  updateCourse
 }

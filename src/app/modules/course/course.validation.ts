@@ -33,7 +33,7 @@ const courseSchemaValidation = z.object({
 /* update schema validation */
 
 const tagsSchemaUpdateValidation = z.object({
-  name: z.string().optional(),
+  name: z.string().optional().optional(),
   isDeleted: z.boolean().default(false).optional(),
 });
 
@@ -50,14 +50,14 @@ const courseSchemaUpdateValidation = z.object({
     instructor: z.string().optional(),
     categoryId: z.string().optional(),
     price: z.number().optional(),
-    tags: z.array(tagsSchemaUpdateValidation),
+    tags: z.array(tagsSchemaUpdateValidation).optional(),
     startDate: z.string().optional(),
     endDate: z.string().optional(),
     language: z.string().optional(),
     provider: z.string().optional(),
     durationWeeks: z.number().optional(),
-    details: detailsSchemaUpdateValidation,
-  }),
+    details: detailsSchemaUpdateValidation.optional(),
+  }).optional(),
 });
 
 /* reviews schema  validation  */

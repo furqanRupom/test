@@ -1,6 +1,8 @@
-import mongoose from 'mongoose';
+import mongoose, { startSession } from 'mongoose';
 import { ICourse, IReviews } from './course.interface';
 import { CourseModel, ReviewsModel } from './course.model';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
 
 /* create course in to db  */
 
@@ -129,6 +131,75 @@ const retrieveAllCoursesFromDB = async (query: any) => {
 
 /* update courses */
 
+
+const updateCourseFromDB = async (id: string, payload: Partial<ICourse>) => {
+  const { tags, details, ...courseRemainingData } = payload;
+
+  const session = await startSession();
+
+  try {
+    session.startTransaction();
+
+    // Step 1: Basic course info update
+    const updatedBasicCourseInfo = await CourseModel.findByIdAndUpdate(
+      id,
+      courseRemainingData,
+      {
+        new: true,
+        runValidators: true,
+        session,
+      },
+    );
+
+    if (!updatedBasicCourseInfo) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to update course');
+    }
+
+    // Step 2: Tags update
+    if (tags && tags.length > 0) {
+      // Filter out tags with isDeleted: true
+      const newTags = tags
+        .filter(el => el.name && !el.isDeleted)
+        .map(el => ({
+          name: el.name,
+          isDeleted: false,
+        }));
+
+      const updatedCourse = await CourseModel.findByIdAndUpdate(
+        id,
+        {
+          $set: { tags: newTags },
+        },
+        {
+          new: true,
+          runValidators: true,
+          session,
+        },
+      );
+
+      if (!updatedCourse) {
+        throw new AppError(
+          httpStatus.BAD_REQUEST,
+          'Failed to update course tags',
+        );
+      }
+
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+
+    const result = await CourseModel.findById(id);
+    return result;
+  } catch (err) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to update course');
+  }
+};
+
+
+
 /* create reviews */
 
 const createCourseReviewsIntoDB = async (payload: IReviews) => {
@@ -221,5 +292,6 @@ export const courseServices = {
   retrieveAllCoursesFromDB,
   createCourseReviewsIntoDB,
   getSpecificCourseReviewsFromDB,
-  getBestCoursesFromDB
+  getBestCoursesFromDB,
+  updateCourseFromDB
 };
