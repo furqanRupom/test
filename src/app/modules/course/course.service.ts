@@ -82,8 +82,8 @@ if (startDate && endDate && startDate <= endDate) {
   /* language filtering */
 
   if (language) {
-    baseQuery.language = language;
-  }
+
+  } baseQuery.language = language;
 
   /*  provider filtering */
 
@@ -148,6 +148,8 @@ if (startDate && endDate && startDate <= endDate) {
 
   return { result, meta };
 };
+
+
 
 /* update courses */
 
