@@ -25,6 +25,6 @@ export const handleValidationError = (
     message:mongoose.Error.CastError ? `Invalid ${errorDetails[0].kind}` :'Validation Error',
     errorMessage,
     errorDetails,
-    stack: config.node_env === 'development' ? error?.stack : null,
+    stack: config.node_env === 'production' ? error?.stack : null,
   };
 };

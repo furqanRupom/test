@@ -12,6 +12,6 @@ export const handleDuplicateError = (error:mongoose.Error.OverwriteModelError) =
      message: `Duplicate Error`,
      errorMessage: `${extractedMessage} is Already Exit !`,
      errorDetails: error,
-     stack: config.node_env === 'development' ? error?.stack : null,
+     stack: config.node_env === 'production' ? error?.stack : null,
    };
 }
