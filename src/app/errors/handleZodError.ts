@@ -30,6 +30,6 @@ export const handleZodError = (error: ZodError) => {
     errorDetails: {
       issues: error.issues,
     },
-    stack: config.node_env === 'development' ? error?.stack : null,
+    stack: config.node_env === 'production' ? error?.stack : null,
   };
 };

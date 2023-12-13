@@ -103,26 +103,34 @@ const retrieveAllCoursesFromDB = async (query: any) => {
   let sort: any = null;
 
   if (
-    sortBy &&
-    ['title', 'price', 'startDate', 'endDate', 'language', 'duration'].includes(
-      sortBy,
-    )
+    query?.sortBy ||
+    [
+      'title',
+      'price',
+      'startDate',
+      'endDate',
+      'language',
+      'durationInWeeks',
+    ].includes(sortBy)
   ) {
-    sort = { [sortBy]: sortOrder === 'desc' ? -1 : 1 };
+    const value = sortBy.split(',').join(' ');
+    sort = { [value]: sortOrder === 'asc' ? 1 : -1 };
   }
 
   let perPage = parseInt(page) | 1;
-  let perPageLimit = parseInt(limit) | 5;
+  let perPageLimit = parseInt(limit) | 10;
   let skip = (perPage - 1) * perPageLimit;
 
-  const result = await CourseModel.find(baseQuery)
+  const queryResult = CourseModel.find(baseQuery)
     .sort(sort)
     .skip(skip)
-    .limit(limit);
+    .limit(perPageLimit);
+
+  const result = await queryResult;
 
   const meta = {
-    page: page | 1,
-    limit: limit | 5,
+    page: perPage,
+    limit: perPageLimit,
     total: result.length,
   };
 
@@ -131,19 +139,63 @@ const retrieveAllCoursesFromDB = async (query: any) => {
 
 /* update courses */
 
-
-const updateCourseFromDB = async (id: string, payload: Partial<ICourse>) => {
-  const { tags, details, ...courseRemainingData } = payload;
+const updateCourseFromDB = async (
+  courseId: string,
+  payload: Partial<ICourse>,
+) => {
+  const {
+    tags,
+    details,
+    startDate,
+    endDate,
+    durationInWeeks,
+    ...remainingCourseInfo
+  } = payload;
 
   const session = await startSession();
 
   try {
     session.startTransaction();
 
+    /* update duration in weeks  */
+
+    if (startDate || endDate) {
+      let updateStartDate = new Date(
+        (startDate as string) || (payload.startDate as string),
+      );
+      let updateEndDate = new Date(
+        (endDate as string) || (payload.endDate as string),
+      );
+      if (!startDate || !endDate) {
+        const previousStartDate = await CourseModel.findById(courseId, {
+          startDate: 1,
+        });
+        const previousLastDate = await CourseModel.findById(courseId, {
+          endDate: 1,
+        });
+        updateStartDate = new Date(previousStartDate?.startDate as string);
+        updateEndDate = new Date(previousLastDate?.endDate as string);
+        const diffTime: number =
+          updateEndDate.getTime() - updateStartDate.getTime();
+        payload.durationInWeeks = Math.ceil(
+          diffTime / (1000 * 60 * 60 * 24 * 7),
+        );
+      }
+
+      const diffTime: number =
+        updateEndDate.getTime() - updateStartDate.getTime();
+      payload.durationInWeeks = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 7));
+    }
+
     // Step 1: Basic course info update
     const updatedBasicCourseInfo = await CourseModel.findByIdAndUpdate(
-      id,
-      courseRemainingData,
+      courseId,
+      {
+        ...remainingCourseInfo,
+        startDate,
+        endDate,
+        durationInWeeks: payload.durationInWeeks,
+      },
       {
         new: true,
         runValidators: true,
@@ -151,11 +203,39 @@ const updateCourseFromDB = async (id: string, payload: Partial<ICourse>) => {
       },
     );
 
+
+
+
     if (!updatedBasicCourseInfo) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to update course');
     }
 
-    // Step 2: Tags update
+    /* update details  */
+
+     if (payload.details) {
+       const updateDetails = await CourseModel.findByIdAndUpdate(
+         courseId,
+         {
+           'details.level': payload.details.level,
+           'details.description': payload.details.description,
+         },
+         {
+           new: true,
+           runValidators: true,
+           session,
+         },
+       );
+
+       if (!updateDetails) {
+         throw new AppError(
+           httpStatus.BAD_REQUEST,
+           'Failed to update course details',
+         );
+       }
+     }
+
+
+    // Tags update
     if (tags && tags.length > 0) {
       // Filter out tags with isDeleted: true
       const newTags = tags
@@ -166,7 +246,7 @@ const updateCourseFromDB = async (id: string, payload: Partial<ICourse>) => {
         }));
 
       const updatedCourse = await CourseModel.findByIdAndUpdate(
-        id,
+        courseId,
         {
           $set: { tags: newTags },
         },
@@ -183,13 +263,17 @@ const updateCourseFromDB = async (id: string, payload: Partial<ICourse>) => {
           'Failed to update course tags',
         );
       }
-
     }
 
     await session.commitTransaction();
     await session.endSession();
 
-    const result = await CourseModel.findById(id);
+    const result = await CourseModel.findById(courseId, {
+      _id: 0,
+      createdAt: 0,
+      updatedAt: 0,
+      __v: 0,
+    });
     return result;
   } catch (err) {
     await session.abortTransaction();
@@ -197,8 +281,6 @@ const updateCourseFromDB = async (id: string, payload: Partial<ICourse>) => {
     throw new AppError(httpStatus.BAD_REQUEST, 'Failed to update course');
   }
 };
-
-
 
 /* create reviews */
 
@@ -293,5 +375,5 @@ export const courseServices = {
   createCourseReviewsIntoDB,
   getSpecificCourseReviewsFromDB,
   getBestCoursesFromDB,
-  updateCourseFromDB
+  updateCourseFromDB,
 };

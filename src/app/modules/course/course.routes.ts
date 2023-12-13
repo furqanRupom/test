@@ -21,7 +21,7 @@ router.get('/courses/:courseId/reviews',courseController.getSpecificCourseReview
 
 router.get('/course/best',courseController.getBestCourse)
 
-router.put('/courses/:courseId',validateRequest(courseValidations.courseSchemaUpdateValidation),courseController.updateCourse);
+router.put('/courses/:courseId',/*validateRequest(courseValidations.courseSchemaUpdateValidation),*/courseController.updateCourse);
 
 
 

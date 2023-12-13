@@ -3,7 +3,6 @@ import config from "../config";
 
 
 export const handleDuplicateError = (error:mongoose.Error.OverwriteModelError) => {
-  // TODO : we will fixed it later
    const match = error.message.match(/{[^}]*"([^"]+)"/);
    const extractedMessage = match && match[1];
    console.log(error.message);

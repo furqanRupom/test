@@ -2,22 +2,23 @@ import mongoose from 'mongoose';
 import config from '../config';
 
 export const handleCastError = (error: mongoose.Error.CastError) => {
-  const errorMessage = error.message.concat();
+  const errorMessage = `${error.value} is not a valid ${error.kind}!`;
+
   const errorDetails = {
-    stringValue:error.stringValue,
-    valueType:error.stringValue,
-    kind:error.kind,
-    path:error.path,
-    reason:error.reason,
-    name:error.name,
-    message:error.message
-  }
+    stringValue: error.stringValue,
+    valueType: error.value,
+    kind: error.kind,
+    path: error.path,
+    reason: error.reason,
+    name: error.name,
+    message: error.message,
+  };
 
   return {
     success: false,
-    message: 'Cast Error',
+    message: `Invalid ${error.kind}`,
     errorMessage,
     errorDetails,
-    stack: config.node_env === 'development' ? error?.stack : null,
+    stack: config.node_env === 'production' ? error?.stack : null,
   };
 };
